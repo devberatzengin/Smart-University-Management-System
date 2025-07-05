@@ -4,10 +4,12 @@ import java.sql.*;
 import java.util.*;
 
 public class DBConnection {
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=UniversityDb";
+    private static final String URL = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=UniversityDb;encrypt=true;trustServerCertificate=true;";
+    private static final String USER = "sa";
+    private static final String PASSWORD = "password";
 
     public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL);
+        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
 
     private static void setParams(PreparedStatement stmt, Object... params) throws SQLException {
@@ -18,15 +20,13 @@ public class DBConnection {
         }
     }
 
-    // select query - returns ResultSet
     public static ResultSet executeQuery(String sql, Object... params) throws SQLException {
         Connection conn = getConnection();
         PreparedStatement stmt = conn.prepareStatement(sql);
         setParams(stmt, params);
-        return stmt.executeQuery(); // Kapatma sorumluluğu dışarıda
+        return stmt.executeQuery();
     }
 
-    // insert, update, delete query
     public static int executeUpdate(String sql, Object... params) throws SQLException {
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -35,7 +35,6 @@ public class DBConnection {
         }
     }
 
-    // returns just one value (example: COUNT, MAX vs.)
     public static Object executeScalar(String sql, Object... params) throws SQLException {
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -48,12 +47,10 @@ public class DBConnection {
         }
     }
 
-    // select => returns list (column name => value)
     public static List<Map<String, Object>> fetchAll(String sql, Object... params) throws SQLException {
         List<Map<String, Object>> results = new ArrayList<>();
         try (Connection conn = getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             setParams(stmt, params);
             ResultSet rs = stmt.executeQuery();
             ResultSetMetaData meta = rs.getMetaData();
@@ -69,5 +66,4 @@ public class DBConnection {
         }
         return results;
     }
-
 }
