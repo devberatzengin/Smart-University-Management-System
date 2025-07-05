@@ -2,22 +2,22 @@ import UserPackage.*;
 
 public class Main {
     public static void main(String[] args) {
-        User user = LoginManager.login("111222333@cbu.edu.tr","adminpass");
+        User user = LoginManager.login("777888999@cbu.edu.tr","pass");
 
         if (user != null) {
             if (user instanceof Admin admin)
             {
-                admin.createNewUser("Testo", "Taylan", "kadikoyBogasi", UserRole.Student, "000111222@cbu.edu.tr");
+                //admin.createNewUser("Testo", "Taylan", "kadikoyBogasi", UserRole.Student, "000111222@cbu.edu.tr");
             }
 
             else if (user instanceof Lecturer lecturer)
             {
-
+                //lecturer.viewAssignedCourses();
             }
 
-            else if (user instanceof Student)
+            else if (user instanceof Student student)
             {
-
+                //student.forgotPassword("000111222@cbu.edu.tr","password");
             }
 
             else if (user instanceof Staff staff)
