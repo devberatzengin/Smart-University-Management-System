@@ -13,7 +13,8 @@ public class Main {
             else if (user instanceof Lecturer lecturer)
             {
                 //lecturer.viewAssignedCourses();
-                lecturer.enterGrade("51","YZM2202",82,80);
+                //lecturer.enterGrade("51","YZM2202",82,80);
+                lecturer.viewStudentInCourse("YZM4400");
             }
 
             else if (user instanceof Student student)

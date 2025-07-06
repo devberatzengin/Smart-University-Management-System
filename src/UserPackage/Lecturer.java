@@ -1,5 +1,7 @@
 package UserPackage;
 import Conn.DBConnection;
+
+import java.sql.Connection;
 import java.time.LocalDate;
 
 import java.sql.ResultSet;
@@ -30,6 +32,7 @@ public class Lecturer extends User {
         }
     }
 
+    // its have to fix because maybe this student doesn't get this course
     public void enterGrade(String StudentId, String CourseCode, int midterm, int finalterm) {
         try {
             // Student is correct ?
@@ -75,5 +78,31 @@ public class Lecturer extends User {
             System.out.println("Error: " + e + "\nError in entering grade.");
         }
     }
+
+    public void viewStudentInCourse(String CourseCode) {
+        try {
+            String query = """
+            select u.UserID, u.Firstname, u.Lastname, u.Email
+            from tblUser u
+            join tblCourseByStudent cbs ON u.UserID = cbs.StudentID
+            join tblCourses c ON c.CourseID = cbs.CourseID
+            where c.CourseCode = ?
+        """;
+
+            ResultSet rs = Conn.DBConnection.executeQuery(query, CourseCode);
+            while (rs.next()) {
+                System.out.println("ID: " + rs.getInt("UserID") + " | " +
+                        rs.getString("Firstname") + " " +
+                        rs.getString("Lastname") + " | " +
+                        rs.getString("Email"));
+            }
+            rs.getStatement().getConnection().close();
+        } catch (Exception e) {
+            System.out.println("Error: " + e + "\nError in view student in courses.");
+        }
+    }
+
+
+
 
 }
