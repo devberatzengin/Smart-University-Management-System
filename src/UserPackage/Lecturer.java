@@ -102,6 +102,44 @@ public class Lecturer extends User {
         }
     }
 
+    public void makeAnnouncement(String title, String content, String courseCode) {
+        try {
+            ResultSet rs = Conn.DBConnection.executeQuery("select LecturerID from tblCourses where CourseCode = ?", courseCode);
+            while (rs.next()) {
+                if (!rs.getString("LecturerID").equals(this.getUserID())) {
+                    System.out.println("You're not the lecturer of this course!");
+                }else {
+                    int result = Conn.DBConnection.executeUpdate(
+                            "insert into tblAnnouncements (Title,Content,CourseCode,PostedBy,PostDate) " +
+                                    " values (?,?,?,?,?)",title,content,courseCode,this.getFirstName()+" "+this.getLastName(),LocalDate.now());
+                    if (result >0) {
+                        System.out.println(result+" announcement has been added!");
+                    }else {
+                        System.out.println(result+" announcement has not been added!");
+                    }
+                }
+            }
+            rs.getStatement().getConnection().close();
+        }catch (Exception e) {
+            System.out.println("Error: " + e + "\nError when creating announcement.");
+        }
+    }
+
+    public void makeAnnouncement(String title, String content) {
+        try {
+            int result = Conn.DBConnection.executeUpdate(
+                    "insert into tblAnnouncements (Title,Content,CourseCode,PostedBy,PostDate) " +
+                            " values (?,?,?,?,?)",title,content,"For Everyone",this.getFirstName()+" "+this.getLastName(),LocalDate.now());
+            if (result >0) {
+                System.out.println(result+" announcement has been added!");
+            }else {
+                System.out.println(result+" announcement has not been added!");
+            }
+
+        }catch (Exception e) {
+            System.out.println("Error: " + e + "\nError when creating announcement.");
+        }
+    }
 
 
 

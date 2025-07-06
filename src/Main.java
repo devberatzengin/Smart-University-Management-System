@@ -2,7 +2,7 @@ import UserPackage.*;
 
 public class Main {
     public static void main(String[] args) {
-        User user = LoginManager.login("111222333@cbu.edu.tr","password");
+        User user = LoginManager.login("777888999@cbu.edu.tr","pass");
 
         if (user != null) {
             if (user instanceof Admin admin)
@@ -15,6 +15,7 @@ public class Main {
                 //lecturer.viewAssignedCourses();
                 //lecturer.enterGrade("51","YZM2202",82,80);
                 //lecturer.viewStudentInCourse("YZM4400");
+                lecturer.makeAnnouncement("About Final Exam","You have work a lot for this exam");
             }
 
             else if (user instanceof Student student)
@@ -24,8 +25,8 @@ public class Main {
                 //student.viewGrades("YZM44a00");
                 //student.viewAllGrades();
                 //student.enrollToCourse("YZM3406");
-                student.unEnrollToCourse("YZM346");
-                }
+                //student.unEnrollToCourse("YZM346");
+            }
 
             else if (user instanceof Staff staff)
             {
