@@ -22,8 +22,10 @@ public class Main {
                 //student.forgotPassword("000111222@cbu.edu.tr","password");
                 //student.viewEnrolledCourses();
                 //student.viewGrades("YZM44a00");
-                student.viewAllGrades();
-            }
+                //student.viewAllGrades();
+                //student.enrollToCourse("YZM3406");
+                student.unEnrollToCourse("YZM346");
+                }
 
             else if (user instanceof Staff staff)
             {

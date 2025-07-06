@@ -22,7 +22,6 @@ public class Student extends User {
                         "where cbs.StudentID = ?",
                     this.getUserID()
             );
-            rs.getStatement().getConnection().close();
 
             while (rs.next()) {
                 System.out.println(
@@ -33,6 +32,8 @@ public class Student extends User {
                         " | Lecturer: " + rs.getString("LecturerFirstName") + " " + rs.getString("LecturerLastName")
                 );
             }
+            //Bug fixed closing operations have to last line
+            rs.getStatement().getConnection().close();
 
         } catch (Exception e) {
             System.out.println("Error: " + e + "\nError when viewing " + this.getFirstName() + "'s courses.");
@@ -93,5 +94,49 @@ public class Student extends User {
         }
     }
 
+    public void enrollToCourse(String courseCode) {
+        try {
+
+            ResultSet rs = Conn.DBConnection.executeQuery("select CourseID from tblCourses where CourseCode = ?", courseCode);
+
+            if (rs.next()) {
+                int courseId = rs.getInt("CourseID");
+
+                int result = Conn.DBConnection.executeUpdate("insert into tblCourseByStudent (StudentID, CourseID) values (?, ?)",this.getUserID(), courseId);
+
+                if (result > 0) {
+                    System.out.println("Successfully enrolled in course: " + courseCode);
+                } else {
+                    System.out.println("Failed to enroll in course: " + courseCode);
+                }
+
+                rs.getStatement().getConnection().close();
+            } else {
+                System.out.println("Course not found with code: " + courseCode);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e + "\nError when enrolling to " + this.getFirstName() + "'s course: " + courseCode);
+        }
+    }
+
+    public void unEnrollToCourse(String courseCode) {
+        try {
+            ResultSet rs = Conn.DBConnection.executeQuery("select CourseID from tblCourses where CourseCode = ?", courseCode);
+            if (rs.next()) {
+                int result = Conn.DBConnection.executeUpdate("delete from tblCourseByStudent where CourseID = ? and StudentID = ?",rs.getString("CourseID") ,this.getUserID());
+                if (result > 0) {
+                    System.out.println("Successfully unenrolled in "+this.getFirstName()+"' course: " + courseCode);
+                }else  {
+                    System.out.println("Failed to unenroll in"+this.getFirstName()+"'s course: " + courseCode+"\n Maybe This user doesn't have this course.");
+                }
+            }else {
+                System.out.println("Course not found with code: " + courseCode);
+            }
+            rs.getStatement().getConnection().close();
+        }catch (Exception e) {
+            System.out.println("Error: " + e + "\nError when unenrolling " + this.getFirstName() + "'s  course: "+courseCode);
+        }
+    }
 
 }
