@@ -1,4 +1,4 @@
-package Announcement;
+package AnnouncementPackage;
 
 import java.time.LocalDate;
 
