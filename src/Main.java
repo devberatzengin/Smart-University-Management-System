@@ -20,7 +20,9 @@ public class Main {
             else if (user instanceof Student student)
             {
                 //student.forgotPassword("000111222@cbu.edu.tr","password");
-                student.viewEnrolledCourses();
+                //student.viewEnrolledCourses();
+                //student.viewGrades("YZM44a00");
+                student.viewAllGrades();
             }
 
             else if (user instanceof Staff staff)
