@@ -3,6 +3,9 @@ package UserPackage;
 import Conn.DBConnection;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 
 public abstract class User {
     protected String userID;
@@ -51,6 +54,37 @@ public abstract class User {
         }
     }
 
+    //It's ready for students, but staff can also receive the announcement, so we need to make it class specific.
+    public void viewMyAnnouncements() {
+        try {
+            List<Map<String, Object>> courseCodes = Conn.DBConnection.fetchAll(
+                    "select CourseCode from tblCourses where CourseID IN " +
+                            "(select CourseID from tblCourseByStudent where StudentID = ?)",
+                    this.getUserID()
+            );
+
+            for (Map<String, Object> course : courseCodes) {
+                String courseCode = (String) course.get("CourseCode");
+
+                List<Map<String, Object>> announcements = Conn.DBConnection.fetchAll(
+                        "select * from tblAnnouncements where CourseCode = ? or CourseCode = 'For Everyone'",
+                        courseCode
+                );
+
+                for (Map<String, Object> a : announcements) {
+                    System.out.println(" Title: " + a.get("Title"));
+                    System.out.println(" Content: " + a.get("Content"));
+                    System.out.println(" CourseCode: " + a.get("CourseCode"));
+                    System.out.println(" Posted By: " + a.get("PostedBy"));
+                    System.out.println(" Post Date: " + a.get("PostDate"));
+                    System.out.println("----------------------------------");
+                }
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage() + " when listing announcements.");
+        }
+    }
 
     public String getUserID() {
         return userID;
